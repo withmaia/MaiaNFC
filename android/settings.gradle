@@ -1,0 +1,3 @@
+rootProject.name = 'MaiaNFCNative'
+
+include ':app'
