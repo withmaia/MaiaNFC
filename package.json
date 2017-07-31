@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "coffee-react": "^5.0.1",
+    "kefir-fetch": "^0.1.14",
     "react": "16.0.0-alpha.12",
     "react-native": "0.46.4",
     "react-native-fontawesome": "^5.7.0",
+    "redux": "^3.7.2"
   },
   "devDependencies": {
     "babel-jest": "20.0.3",
