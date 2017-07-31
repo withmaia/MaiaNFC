@@ -1,3 +1,3 @@
 import { AppRegistry } from 'react-native'
-import App from './app.js'
+import App from './lib/app.js'
 AppRegistry.registerComponent('MaiaNFCNative', () => App);

@@ -1,2 +1,2 @@
 echo [$(date)] Building...
-cjsx --bare -p -c app.coffee > app.js
+cjsx --bare -o ./lib -c ./src
