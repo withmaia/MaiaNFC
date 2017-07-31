@@ -12,10 +12,12 @@ module.exports = class Spinner extends React.Component
         @state = {spin: new Animated.Value(0)}
 
     componentDidMount: ->
-        Animated.timing @state.spin, {toValue: 360, duration: 5000}
+        Animated.timing @state.spin, {toValue: 360, duration: 3000}
             .start()
 
     render: ->
         spin_transform = {transform: [{rotate: @state.spin.interpolate spin_interpolation}]}
-        <Animated.View style={[styles.action_icon, spin_transform]}><Icon icon='circleONotch' /></Animated.View>
+        <Animated.View style={[styles.action_icon, spin_transform]}>
+            <Icon icon='circleONotch' />
+        </Animated.View>
 

@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "coffee-react": "^5.0.1",
+    "immutability-helper": "^2.3.0",
     "kefir-fetch": "^0.1.14",
     "react": "16.0.0-alpha.12",
     "react-native": "0.46.4",

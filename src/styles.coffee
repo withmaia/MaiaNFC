@@ -5,8 +5,21 @@ module.exports = styles = StyleSheet.create
     container:
         flex: 1
         justifyContent: 'center'
-        alignItems: 'center'
+        alignItems: 'stretch'
         backgroundColor: colors.purple
+
+    logo:
+        alignSelf: 'center'
+        marginTop: 100
+
+    spacer:
+        flexGrow: 1
+
+    animated_action:
+        position: 'absolute'
+        top: '50%'
+        left: 20
+        right: 20
 
     action:
         backgroundColor: colors.glass
@@ -15,7 +28,6 @@ module.exports = styles = StyleSheet.create
         paddingRight: 30
         paddingTop: 15
         paddingBottom: 15
-        marginTop: 30
         flexDirection: 'row'
 
     icon:
@@ -29,10 +41,8 @@ module.exports = styles = StyleSheet.create
 
     action_description:
         fontSize: 20
-        textAlign: 'center'
         color: colors.white
 
     props:
         fontSize: 15
-
 
