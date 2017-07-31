@@ -17,10 +17,16 @@ module.exports = styles = StyleSheet.create
         borderRadius: 5
         paddingLeft: 30
         paddingRight: 30
-        paddingTop: 15 + 5
+        paddingTop: 15
         paddingBottom: 15
         marginTop: 30
         flexDirection: 'row'
+
+    icon:
+        fontSize: 20
+        lineHeight: 25
+        height: 25
+        alignItems: 'center'
 
     action_icon:
         marginRight: 15
