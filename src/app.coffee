@@ -32,6 +32,35 @@ loaders =
     'maia/price': (market_name) ->
         fetch$ 'post', 'http://api.withmaia.com/price/getPrice.json', {body: {args: [market_name]}}
 
+LightAction = ({light_name, value, loading}) ->
+    <View style=styles.action>
+        {if loading
+            <Spinner />
+        else if value == 'on'
+            <Icon icon='lightbulbO' style={[styles.action_icon, {color: colors.yellow}]} />
+        else
+            <Icon icon='lightbulbO' style=styles.action_icon />
+        }
+        {if loading
+            <Text style=styles.action_description>Toggling the {helpers.unslugify light_name}...</Text>
+        else
+            <Text style=styles.action_description>Turned {value} the {helpers.unslugify light_name}.</Text>
+        }
+    </View>
+
+PriceAction = ({market_name, value, loading}) ->
+    <View style=styles.action>
+        {if loading
+            <Spinner />
+        else
+            <Icon icon='bitcoin' style=styles.action_icon />
+        }
+        {if loading
+            <Text style=styles.action_description>Loading...</Text>
+        else
+            <Text style=styles.action_description>{helpers.capitalize helpers.unslugify market_name} is ${value.toFixed 2}.</Text>
+        }
+    </View>
 
 module.exports = class MaiaNFCNative extends React.Component
     constructor: ->
