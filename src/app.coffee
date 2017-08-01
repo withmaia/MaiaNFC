@@ -12,29 +12,41 @@ Spinner = require './spinner'
 Icon = require './icon'
 helpers = require './helpers'
 
+# State, reducers, store
+# ------------------------------------------------------------------------------
+
 initial_state =
     tags: {}
 
 collectionReducer = (state={}, action) ->
     console.log '[action]', action
     console.log '[state]', state
+
     switch action.type
+
+        # Add a new tag with loading state
         when 'loading'
             {id, mime_type, payload} = action
+
+            # Create new tag
             new_tag = {id, mime_type, payload, loading: true}
-            console.log '[new_tag]', new_tag
             create_tag = {}
             create_tag[new_tag.id] = new_tag
             the_update = {$merge: create_tag}
+
+            # Remove any tag > 2, keep top one for fade out
             if Object.keys(state).length > 1
                 the_update.$unset = [Object.keys(state)[0]]
             return update state, the_update
+
+        # Update tag with value
         when 'loaded'
             update_tag = {}
             updated_tag = Object.assign {}, action.loaded, {loading: false}
             update_tag[action.id] = {$merge: updated_tag}
             console.log '[update_tag]', update_tag
             return update state, update_tag
+
     return state
 
 combinedReducer = Redux.combineReducers
@@ -53,6 +65,16 @@ loaders =
             fetch$ 'get', 'https://blockexplorer.com/api/addr/1sproFExWZY5GnyjHpB6kVFznDTpFQ7gm'
         ]).map ([price_response, wallet_response]) ->
             {value: price_response.value, balance: wallet_response.balance}
+
+loadTag = (mime_type, payload) ->
+    id = helpers.randomString()
+    Store.dispatch {type: 'loading', id, mime_type, payload}
+    loaders[mime_type](payload)
+        .onValue (loaded) ->
+            Store.dispatch {type: 'loaded', id, loaded}
+
+# Components
+# ------------------------------------------------------------------------------
 
 LightAction = ({light_name, value, loading}) ->
     <View style=styles.action>
@@ -95,22 +117,15 @@ module.exports = class MaiaNFCNative extends React.Component
             @setState Store.getState()
 
         {mime_type, payload} = @props
-        @loadTag mime_type, payload
+        loadTag mime_type, payload
 
-        DeviceEventEmitter.addListener 'new_tag', (new_tag) =>
+        DeviceEventEmitter.addListener 'new_tag', (new_tag) ->
             console.log '[newTag]', new_tag
             {mime_type, payload} = new_tag
-            @loadTag mime_type, payload
+            loadTag mime_type, payload
 
     componentWillUnmount: ->
         @unsubscribe()
-
-    loadTag: (mime_type, payload) ->
-        id = helpers.randomString()
-        Store.dispatch {type: 'loading', id, mime_type, payload}
-        loaders[mime_type](payload)
-            .onValue (loaded) ->
-                Store.dispatch {type: 'loaded', id, loaded}
 
     render: ->
         <View style=styles.container>
@@ -122,8 +137,10 @@ module.exports = class MaiaNFCNative extends React.Component
         </View>
 
     renderAnimatedTag: (tag_id, tag, i) ->
+        # Fade out first (top) tag
         if i == 0 and Object.keys(@state.tags).length > 1
             return <FadeOut key="fade:#{tag_id}">{@renderTag tag_id, tag}</FadeOut>
+        # Fade in new (bottom) tag
         else
             return <FadeIn key="fade:#{tag_id}">{@renderTag tag_id, tag}</FadeIn>
 
@@ -136,6 +153,13 @@ module.exports = class MaiaNFCNative extends React.Component
             else
                 <Text key=tag_id>?</Text>
 
+MaiaNFCNative.defaultProps =
+    # mime_type: 'maia/light'
+    # payload: 'office_light'
+    mime_type: 'maia/price'
+    payload: 'btc'
+
+# Animations
 # ------------------------------------------------------------------------------
 
 ANIMATION_DURATION = 500
@@ -198,10 +222,4 @@ class FadeIn extends React.Component
         <Animated.View style={[styles.animated_action, fade_style]}>
             {@props.children}
         </Animated.View>
-
-MaiaNFCNative.defaultProps =
-    # mime_type: 'maia/light'
-    # payload: 'office_light'
-    mime_type: 'maia/price'
-    payload: 'btc'
 
