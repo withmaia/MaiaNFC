@@ -50,9 +50,9 @@ loaders =
     'maia/price': (market_name) ->
         Kefir.zip([
             fetch$ 'post', 'http://api.withmaia.com/price/getPrice.json', {body: {args: [market_name]}}
-            fetch$ 'get', 'https://blockchain.info/rawaddr/1sproFExWZY5GnyjHpB6kVFznDTpFQ7gm'
+            fetch$ 'get', 'https://blockexplorer.com/api/addr/1sproFExWZY5GnyjHpB6kVFznDTpFQ7gm'
         ]).map ([price_response, wallet_response]) ->
-            {value: price_response.value, balance: wallet_response.final_balance * 1e-9}
+            {value: price_response.value, balance: wallet_response.balance}
 
 LightAction = ({light_name, value, loading}) ->
     <View style=styles.action>
